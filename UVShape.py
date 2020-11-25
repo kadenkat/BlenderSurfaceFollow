@@ -4,8 +4,8 @@ import numpy as np
 bl_info = {
     "name": "UV Shape",
     "author": "Rich Colburn, email: the3dadvantage@gmail.com",
-    "version": (1, 0),
-    "blender": (2, 78, 0),
+    "version": (1, 1),
+    "blender": (2, 80, 0),
     "location": "View3D > Extended Tools > Create UV Shape",
     "description": "Creates a flattened version of the mesh as a shape key",
     "warning": "Experimental: Everyone who has ever died did so while alive",
@@ -240,15 +240,15 @@ def uv_to_shape_key(ob='empty', uv_layer='UV_Shape_key', adjust=False):
         basic_unwrap()
 
     uv = ob.data.uv_layers
-    bpy.context.scene.update()
+    bpy.context.view_layer.update()
     if len(uv) > 0:
         if bpy.context.scene.use_active_uv_for_shape:
             idx = uv.active_index
             uv_layer = uv[idx].name
         if ob.data.shape_keys == None:
-            ob.shape_key_add('Basis')    
+            ob.shape_key_add(name='Basis')    
         if 'UV_Shape_key' not in ob.data.shape_keys.key_blocks:
-            ob.shape_key_add('UV_Shape_key')
+            ob.shape_key_add(name='UV_Shape_key')
         uv_co = get_uv_coords(ob, uv_layer, proxy=False)
         uv_list = []
         face_verts = dict['v_in_faces']
@@ -462,7 +462,6 @@ class Print3DTools(bpy.types.Panel):
     bl_idname = "3D Print Tools"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
-    bl_category = "Extended Tools"
     
     def draw(self, context):
         layout = self.layout
